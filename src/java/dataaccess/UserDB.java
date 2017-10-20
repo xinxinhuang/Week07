@@ -15,120 +15,138 @@ public class UserDB {
     public int insert(User user) throws NotesDBException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        int i = 0;
+
         try {
-            String preparedQuery = "INSERT INTO User" + "(username,password,email,active,firstname,lastname" + "VALUES " + "(?, ?, ?)";
+            String preparedQuery = "INSERT INTO User (username,password,email,active,firstname,lastname VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(preparedQuery);
-            ps.setString(1,user.getUsername());
-            ps.setString(2,user.getPassword());
-            ps.setString(3,user.getEmail());
-            ps.setInt(4,user.getActive());
-            ps.setString(5,user.getFirstname());
-            ps.setString(6,user.getLastname());
-            i = ps.executeUpdate();
-           
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            ps.setInt(4, user.getActive());
+            ps.setString(5, user.getFirstname());
+            ps.setString(6, user.getLastname());
+            int rows = ps.executeUpdate();
+            return rows;
         } catch (SQLException ex) {
-            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot insert " + user.toString(), ex);
+            throw new NotesDBException("Error inserting user");
+        } finally {
+            pool.freeConnection(connection);
         }
-         if (i>0) {
-             pool.freeConnection(connection);
-                return 1;
-            }
-            else {
-             pool.freeConnection(connection);
-                return 0;
-            }
     }
 
     public int update(User user) throws NotesDBException {
-        try
-        {
-            ConnectionPool pool = ConnectionPool.getInstance();
-            Connection connection = pool.getConnection();
-            String preparedSQL = "UPDATE User SET"
-                    +"password = ?,"
-                    +"email = ?,"
-                    +"WHERE username = ?";
-            
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        try {
+            String preparedSQL = "UPDATE User SET "
+                    + "password = ?, "
+                    + "email = ?, "
+                    + "active = ?, "
+                    + "firstname = ?, "
+                    + "lastname = ?"
+                    + "WHERE username = ?";
+
             PreparedStatement ps = connection.prepareStatement(preparedSQL);
-            
+
             ps.setString(1, user.getPassword());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getUsername());
-            
-            ps.executeUpdate();
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
+
+            int rows = ps.executeUpdate();
+            return rows;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot update " + user.toString(), ex);
+            throw new NotesDBException("Error updating user");
+        } finally {
+            pool.freeConnection(connection);
         }
-        return 1;
     }
 
     public List<User> getAll() throws NotesDBException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM user;");
-            ResultSet rs = ps.executeQuery();
+            ps = connection.prepareStatement("SELECT * FROM user;");
+            rs = ps.executeQuery();
             List<User> users = new ArrayList<>();
-            while(rs.next()){
+            while (rs.next()) {
                 users.add(new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname")));
             }
             pool.freeConnection(connection);
             return users;
         } catch (SQLException ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot read users", ex);
+            throw new NotesDBException("Error getting Users");
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+            } catch (SQLException ex) {
+            }
             pool.freeConnection(connection);
-            throw new NotesDBException("something serious happened");
         }
     }
 
     /**
      * Get a single user by their username.
+     *
      * @param username The unique username.
      * @return A User object if found, null otherwise.
-     * @throws NotesDBException 
+     * @throws NotesDBException
      */
     public User getUser(String username) throws NotesDBException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String selectSQL = "SELECT * FROM User WHERE username = ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            PreparedStatement ps = connection.prepareStatement(selectSQL);
+            ps = connection.prepareStatement(selectSQL);
             ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-       
+            rs = ps.executeQuery();
+
             User user = null;
             while (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname"));
             }
             pool.freeConnection(connection);
             return user;
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot read users", ex);
+            throw new NotesDBException("Error getting Users");
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+            } catch (SQLException ex) {
+            }
             pool.freeConnection(connection);
-            throw new NotesDBException();
         }
-        
     }
 
     public int delete(User user) throws NotesDBException {
-        int deleteStatus = 0;
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        String preparedQuery = "DELETE FROM User "
-                            + "WHERE username = ?";
+        String preparedQuery = "DELETE FROM User WHERE username = ?";
         PreparedStatement ps;
+
         try {
             ps = connection.prepareStatement(preparedQuery);
             ps.setString(1, user.getUsername());
-            deleteStatus = ps.executeUpdate();
+            int rows = ps.executeUpdate();
+            return rows;
         } catch (SQLException ex) {
-            throw new NotesDBException();
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot delete " + user.toString(), ex);
+            throw new NotesDBException("Error deleting User");
+        } finally {
+            pool.freeConnection(connection);
         }
-        
-
-        pool.freeConnection(connection);
-        
-        return deleteStatus;
     }
 }

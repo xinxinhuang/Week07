@@ -3,15 +3,16 @@ package domainmodel;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    String username;
-    String password;
-    String email;
-    int active;
-    String firstname;
-    String lastname;
-    
+
+    private String username;
+    private String password;
+    private String email;
+    private int active;
+    private String firstname;
+    private String lastname;
+
     public User() {
-        
+
     }
 
     public User(String username, String password, String email, int active, String firstname, String lastname) {
@@ -22,18 +23,23 @@ public class User implements Serializable {
         this.firstname = firstname;
         this.lastname = lastname;
     }
-    
+
     public User(String username, String password, String email, int active) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.active = active;
+        firstname = "";
+        lastname = "";
     }
-    
+
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.active = 1;
+        firstname = "";
+        lastname = "";
     }
 
     public String getUsername() {
