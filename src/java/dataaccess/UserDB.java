@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDB {
 
@@ -14,7 +16,25 @@ public class UserDB {
     }
 
     public int update(User user) throws NotesDBException {
-        return 0;
+        try
+        {
+            String preparedSQL = "UPDATE User SET"
+                    +"password = ?,"
+                    +"email = ?,"
+                    +"WHERE username = ?";
+            
+            PreparedStatement ps = connection.preparedStatement(preparedSQL);
+            
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getUsername());
+            
+            ps.executeUpdate();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 1;
     }
 
     public List<User> getAll() throws NotesDBException {
