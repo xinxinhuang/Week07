@@ -33,6 +33,8 @@ public class UserServlet extends HttpServlet {
         String username = (String) request.getAttribute("username");
         String password = (String) request.getAttribute("password");
         String email = (String) request.getAttribute("email");
+        String firstname = (String) request.getAttribute("firstname");
+        String lastname = (String) request.getAttribute("lastname");
         UserService user = new UserService();
         
         if (action.equals("delete")) {
@@ -43,7 +45,7 @@ public class UserServlet extends HttpServlet {
             }
         } else if (action.equals("edit")) {
             try {
-                user.update(username, password,email);
+                user.update(username, password, email);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -51,7 +53,7 @@ public class UserServlet extends HttpServlet {
         else if (action.equals("add"))
         {
             try {
-                user.insert(username, password, email, 1);
+                user.insert(username, password, email, 1, firstname, lastname);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
