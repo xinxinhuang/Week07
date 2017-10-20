@@ -29,6 +29,11 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String action = (String) request.getAttribute("action");
+        UserService user = new UserService();
+        
+        if (action.equals("delete")) {
+            
+        }
     }
 }
