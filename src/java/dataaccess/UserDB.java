@@ -41,7 +41,28 @@ public class UserDB {
     }
 
     public int update(User user) throws NotesDBException {
-        return 0;
+        try
+        {
+            ConnectionPool pool = ConnectionPool.getInstance();
+            Connection connection = pool.getConnection();
+            String preparedSQL = "UPDATE User SET"
+                    +"password = ?,"
+                    +"email = ?,"
+                    +"WHERE username = ?";
+            
+            PreparedStatement ps = connection.prepareStatement(preparedSQL);
+            
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getUsername());
+            
+            ps.executeUpdate();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+        return 1;
     }
 
     public List<User> getAll() throws NotesDBException {
