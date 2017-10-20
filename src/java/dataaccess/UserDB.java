@@ -1,6 +1,7 @@
 package dataaccess;
 
 import domainmodel.User;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,8 +42,9 @@ public class UserDB {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String selectSQL = "SELECT * FROM User WHERE username = ?";
-        PreparedStatement ps = connection.prepareStatement(selectSQL);
+
         try {
+            PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
        
@@ -68,7 +70,7 @@ public class UserDB {
             ps.setString(1, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            throws new NoteDBException();
+            throw new NotesDBException();
         }
         
 
