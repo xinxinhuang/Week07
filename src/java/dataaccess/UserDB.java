@@ -58,7 +58,8 @@ public class UserDB {
     }
 
     public int delete(User user) throws NotesDBException {
-      ConnectionPool pool = ConnectionPool.getInstance();
+        int deleteStatus = 0;
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String preparedQuery = "DELETE FROM User "
                             + "WHERE username = ?";
@@ -66,7 +67,7 @@ public class UserDB {
         try {
             ps = connection.prepareStatement(preparedQuery);
             ps.setString(1, user.getUsername());
-            ps.executeUpdate();
+            deleteStatus = ps.executeUpdate();
         } catch (SQLException ex) {
             throws new NoteDBException();
         }
@@ -74,6 +75,6 @@ public class UserDB {
 
         pool.freeConnection(connection);
         
-        return 0;
+        return deleteStatus;
     }
 }
