@@ -1,6 +1,7 @@
 package dataaccess;
 
 import domainmodel.User;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class UserDB {
             ResultSet rs = ps.executeQuery();
             List<User> users = new ArrayList<>();
             while(rs.next()){
-                users.add(new User());
+                users.add(new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname")));
             }
             return users;
         } catch (SQLException ex) {
@@ -31,8 +32,30 @@ public class UserDB {
         }
     }
 
+    /**
+     * Get a single user by their username.
+     * @param username The unique username.
+     * @return A User object if found, null otherwise.
+     * @throws NotesDBException 
+     */
     public User getUser(String username) throws NotesDBException {
-        return null;
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        String selectSQL = "SELECT * FROM User WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(selectSQL);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+       
+            User user = null;
+            while (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname"));
+            }
+            
+            return user;
+        } catch (SQLException e) {
+            throw new NotesDBException();
+        }
     }
 
     public int delete(User user) throws NotesDBException {
@@ -46,7 +69,7 @@ public class UserDB {
             ps.setString(1, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            throws new NoteDBException();
+            throw new NotesDBException();
         }
         
 
