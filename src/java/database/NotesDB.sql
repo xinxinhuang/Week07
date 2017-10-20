@@ -10,7 +10,7 @@ CREATE TABLE User(
     username VARCHAR(10) NOT NULL,
     password VARCHAR(10) NOT NULL,
     email VARCHAR(30) NOT NULL,
-    active NUMBER(1) NOT NULL,
+    active BIT NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (username)
