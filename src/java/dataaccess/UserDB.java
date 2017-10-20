@@ -4,6 +4,7 @@ import domainmodel.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDB {
@@ -17,6 +18,19 @@ public class UserDB {
     }
 
     public List<User> getAll() throws NotesDBException {
+        List<User> users = new ArrayList<>();
+        
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM user");
+        try {
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                users.add(new User());
+            }
+        } catch (SQLException ex) {
+            throw new NotesDBException();
+        }
+        
+        
         return null;
     }
 
