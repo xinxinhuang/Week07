@@ -26,8 +26,8 @@
                 <c:forEach var="user" items="${users}">
                     <tr>
                         <td>${user.username}</td>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
+                        <td>${user.firstname}</td>
+                        <td>${user.lastname}</td>
                         <td>${user.email}</td>
                         <td>
                             <form action="users" method="POST" >
