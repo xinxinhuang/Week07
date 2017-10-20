@@ -1,6 +1,7 @@
 package dataaccess;
 
 import domainmodel.User;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +44,7 @@ public class UserDB {
             ResultSet rs = ps.executeQuery();
             List<User> users = new ArrayList<>();
             while(rs.next()){
-                users.add(new User());
+                users.add(new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname")));
             }
             return users;
         } catch (SQLException ex) {
@@ -61,8 +62,8 @@ public class UserDB {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String selectSQL = "SELECT * FROM User WHERE username = ?";
-        PreparedStatement ps = connection.prepareStatement(selectSQL);
         try {
+            PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
        
@@ -78,7 +79,8 @@ public class UserDB {
     }
 
     public int delete(User user) throws NotesDBException {
-      ConnectionPool pool = ConnectionPool.getInstance();
+        int deleteStatus = 0;
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String preparedQuery = "DELETE FROM User "
                             + "WHERE username = ?";
@@ -86,14 +88,14 @@ public class UserDB {
         try {
             ps = connection.prepareStatement(preparedQuery);
             ps.setString(1, user.getUsername());
-            ps.executeUpdate();
+            deleteStatus = ps.executeUpdate();
         } catch (SQLException ex) {
-            throws new NoteDBException();
+            throw new NotesDBException();
         }
         
 
         pool.freeConnection(connection);
         
-        return 0;
+        return deleteStatus;
     }
 }
