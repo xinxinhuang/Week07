@@ -1,12 +1,18 @@
 package businesslogic;
 
+import dataaccess.UserDB;
 import domainmodel.User;
 import java.util.List;
 
 public class UserService {
-
+    private UserDB userDB;
+    
+    
     public User get(String username) throws Exception {
-        return null;
+        userDB = new UserDB();
+        
+        return userDB.getUser(username);
+        
     }
 
     public List<User> getAll() throws Exception {
