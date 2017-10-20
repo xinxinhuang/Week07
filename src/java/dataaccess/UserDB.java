@@ -1,6 +1,7 @@
 package dataaccess;
 
 import domainmodel.User;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class UserDB {
@@ -22,6 +23,14 @@ public class UserDB {
     }
 
     public int delete(User user) throws NotesDBException {
+        String preparedQuery = "DELETE FROM User "
+                            + "WHERE username = ?";
+        PreparedStatement ps = connection.prepareStatement(preparedQuery);
+        ps.setString(1, username);
+        ps.executeUpdate();
+
+        
+        
         return 0;
     }
 }
