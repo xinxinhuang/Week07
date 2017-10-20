@@ -16,6 +16,7 @@ public class UserService {
     }
 
     public List<User> getAll() throws Exception {
+        userDB = new UserDB();
         return userDB.getAll();
     }
 
