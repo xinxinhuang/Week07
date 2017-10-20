@@ -15,7 +15,7 @@ public class UserDB {
     public int insert(User user) throws NotesDBException {
         try {
             String preparedQuery = "INSERT INTO User" + "(username,password,email,active,firstname,lastname" + "VALUES " + "(?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(preparedStatement);
+            PreparedStatement ps = connection.prepareStatement(preparedQuery);
             ps.setString(1,user.getUsername());
             ps.setString(2,user.getPassword());
             ps.setString(3,user.getEmail());
