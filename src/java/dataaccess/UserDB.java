@@ -43,12 +43,14 @@ public class UserDB {
     public int update(User user) throws NotesDBException {
         try
         {
+            ConnectionPool pool = ConnectionPool.getInstance();
+            Connection connection = pool.getConnection();
             String preparedSQL = "UPDATE User SET"
                     +"password = ?,"
                     +"email = ?,"
                     +"WHERE username = ?";
             
-            PreparedStatement ps = connection.preparedStatement(preparedSQL);
+            PreparedStatement ps = connection.prepareStatement(preparedSQL);
             
             ps.setString(1, user.getPassword());
             ps.setString(2, user.getEmail());
