@@ -30,9 +30,9 @@ public class UserService {
         return userDB.delete(deletedUser);
     }
     
-    public int insert(String username, String password,String email,int active) throws Exception {
+    public int insert(String username, String password,String email,int active, String firstname, String lastname) throws Exception {
         userDB = new UserDB();
-        User insertUser = new User(username,password,email,active);
+        User insertUser = new User(username,password,email,active,firstname,lastname);
         
         return  userDB.insert(insertUser);        
         
