@@ -43,7 +43,7 @@ public class UserServlet extends HttpServlet {
             }
         } else if (action.equals("edit")) {
             try {
-                user.update(username, password);
+                user.update(username, password, email);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
