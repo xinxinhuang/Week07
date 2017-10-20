@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public int insert(String username, String password) throws Exception {
-        
+        userDB = new UserDB();
         
         
         return 0;
