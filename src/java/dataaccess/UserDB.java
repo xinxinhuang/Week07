@@ -7,11 +7,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDB {
 
     public int insert(User user) throws NotesDBException {
-        return 0;
+        try {
+            String preparedQuery = "INSERT INTO User" + "(username,password,email,active,firstname,lastname" + "VALUES " + "(?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(preparedStatement);
+            ps.setString(1,user.getUsername());
+            ps.setString(2,user.getPassword());
+            ps.setString(3,user.getEmail());
+            ps.setInt(4,user.getActive());
+            ps.setString(5,user.getFirstname());
+            ps.setString(6,user.getLastname());
+            int i = ps.executeUpdate();
+            if (i>0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int update(User user) throws NotesDBException {
@@ -51,11 +71,13 @@ public class UserDB {
             while (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname"));
             }
-            
+            pool.freeConnection(connection);
             return user;
         } catch (SQLException e) {
+            pool.freeConnection(connection);
             throw new NotesDBException();
         }
+        
     }
 
     public int delete(User user) throws NotesDBException {
