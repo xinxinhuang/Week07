@@ -31,11 +31,18 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = (String) request.getAttribute("action");
         String username = (String) request.getAttribute("username");
+        String password = (String) request.getAttribute("password");
         UserService user = new UserService();
         
         if (action.equals("delete")) {
             try {
                 user.delete(username);
+            } catch (Exception ex) {
+                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (action.equals("edit")) {
+            try {
+                user.update(username, password);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
