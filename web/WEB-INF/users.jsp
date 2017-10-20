@@ -18,7 +18,7 @@
                     <th>Delete</th>
                     <th>Edit</th>
                 </tr>
-                <c:forEach var="user" items="${userTable}">
+                <c:forEach var="user" items="${users}">
                     <tr>
                         <td>${user.username}</td>
                         <td>${user.firstName}</td>
@@ -39,7 +39,7 @@
                     </tr>
                 </c:forEach>
         </table>
-        <c:if test="${1 = 1}">
+        <c:if test="${1 == 1}">
             <form action="users" method="POST">
                 <input type="text" name="username">
                 <input type="text" name="firstname">
@@ -50,7 +50,7 @@
                 <input type="submit" value="Save">
             </form>
         </c:if>
-        <c:if test="${1 = 1}">
+        <c:if test="${1 == 1}">
             <form action="users" method="POST">
                 <input type="text" name="firstname">
                 <input type="text" name="lastname">
