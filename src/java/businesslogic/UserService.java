@@ -16,7 +16,7 @@ public class UserService {
     }
 
     public List<User> getAll() throws Exception {
-        return null;
+        return userDB.getAll();
     }
 
     public int update(String username, String password) throws Exception {
