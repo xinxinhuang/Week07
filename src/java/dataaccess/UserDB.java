@@ -23,15 +23,22 @@ public class UserDB {
     }
 
     public int delete(User user) throws NotesDBException {
+      ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
         String preparedQuery = "DELETE FROM User "
                             + "WHERE username = ?";
-        PreparedStatement ps = connection.prepareStatement(preparedQuery);
-        ps.setString(1, username);
-        ps.executeUpdate();
-
+        PreparedStatement ps;
+        try {
+            ps = connection.prepareStatement(preparedQuery);
+            ps.setString(1, user.getUsername());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throws new NoteDBException();
+        }
         
+
+        pool.freeConnection(connection);
         
         return 0;
-        // test
     }
 }
