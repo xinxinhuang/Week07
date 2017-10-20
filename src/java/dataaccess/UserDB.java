@@ -45,6 +45,8 @@ public class UserDB {
     }
 
     public List<User> getAll() throws NotesDBException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
         try {
             PreparedStatement ps = ConnectionPool.getInstance().getConnection().prepareStatement("SELECT * FROM user;");
             ResultSet rs = ps.executeQuery();
@@ -52,8 +54,10 @@ public class UserDB {
             while(rs.next()){
                 users.add(new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname")));
             }
+            pool.freeConnection(connection);
             return users;
         } catch (SQLException ex) {
+            pool.freeConnection(connection);
             throw new NotesDBException("something serious happened");
         }
     }

@@ -18,7 +18,7 @@
                     <th>Delete</th>
                     <th>Edit</th>
                 </tr>
-                <c:forEach var="user" items="${userTable}">
+                <c:forEach var="user" items="${users}">
                     <tr>
                         <td>${user.username}</td>
                         <td>${user.firstName}</td>
@@ -39,23 +39,25 @@
                     </tr>
                 </c:forEach>
         </table>
-        <c:if test="${1 = 1}">
+        <c:if test="${1 == 1}">
+            <h3>Add User</h3>
             <form action="users" method="POST">
-                <input type="text" name="username">
-                <input type="text" name="firstname">
-                <input type="text" name="lastname">
-                <input type="text" name="password">
-                <input type="text" name="email">
+                <input type="text" name="username"><br>
+                <input type="text" name="firstname"><br>
+                <input type="text" name="lastname"><br>
+                <input type="text" name="password"><br>
+                <input type="text" name="email"><br>
                 <input type="hidden" name="action" value="add">
                 <input type="submit" value="Save">
             </form>
         </c:if>
-        <c:if test="${1 = 1}">
+        <c:if test="${1 == 1}">
+            <h3>Edit User</h3>
             <form action="users" method="POST">
-                <input type="text" name="firstname">
-                <input type="text" name="lastname">
-                <input type="text" name="password">
-                <input type="text" name="email">
+                <input type="text" name="firstname"><br>
+                <input type="text" name="lastname"><br>
+                <input type="text" name="password"><br>
+                <input type="text" name="email"><br>
                 <input type="hidden" name="action" value="edit">
                 <input type="submit" value="Save">
             </form>
