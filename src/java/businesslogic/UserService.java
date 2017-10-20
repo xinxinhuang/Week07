@@ -24,10 +24,15 @@ public class UserService {
     }
 
     public int delete(String username) throws Exception {
-        return 0;
+        userDB = new UserDB();
+        User deletedUser = userDB.getUser(username);
+        return userDB.delete(deletedUser);
     }
 
     public int insert(String username, String password) throws Exception {
+        
+        
+        
         return 0;
     }
 
