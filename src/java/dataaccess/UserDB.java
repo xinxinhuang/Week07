@@ -69,7 +69,7 @@ public class UserDB {
             ps.setString(1, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            throws new NoteDBException();
+            throw new NotesDBException();
         }
         
 
