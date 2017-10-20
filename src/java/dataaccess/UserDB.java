@@ -14,8 +14,10 @@ public class UserDB {
 
     public int insert(User user) throws NotesDBException {
         try {
+            ConnectionPool pool = ConnectionPool.getInstance();
+            Connection connection = pool.getConnection();
             String preparedQuery = "INSERT INTO User" + "(username,password,email,active,firstname,lastname" + "VALUES " + "(?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(preparedStatement);
+            PreparedStatement ps = connection.prepareStatement(preparedQuery);
             ps.setString(1,user.getUsername());
             ps.setString(2,user.getPassword());
             ps.setString(3,user.getEmail());
@@ -71,11 +73,13 @@ public class UserDB {
             while (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname"));
             }
-            
+            pool.freeConnection(connection);
             return user;
         } catch (SQLException e) {
+            pool.freeConnection(connection);
             throw new NotesDBException();
         }
+        
     }
 
     public int delete(User user) throws NotesDBException {
