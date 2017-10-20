@@ -36,12 +36,25 @@ public class UserService {
         return userDB.delete(deletedUser);
     }
     
-    public int insert(String username, String password,String email,int active, String firstname, String lastname) throws Exception {
+    // if firstname and lastname not entered pass null
+    public int insert(String username, String password,String email,int active,String firstname,String lastname) throws Exception {
+
         userDB = new UserDB();
-        User insertUser = new User(username,password,email,active,firstname,lastname);
+
+         User insertUser = null;
+        if(firstname == null || lastname == null)
+        {
+           insertUser = new User(username,password,email,active); 
+        }
+        else if(firstname != null&& firstname.isEmpty() || lastname != null && lastname.isEmpty())
+        {
+           insertUser = new User(username,password,email,active,firstname,lastname); 
+        }
+        
+
         
         return  userDB.insert(insertUser);        
-        
+       
     }
 
 }
