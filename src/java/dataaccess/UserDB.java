@@ -18,20 +18,17 @@ public class UserDB {
     }
 
     public List<User> getAll() throws NotesDBException {
-        List<User> users = new ArrayList<>();
-        
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM user");
         try {
+            PreparedStatement ps = ConnectionPool.getInstance().getConnection().prepareStatement("SELECT * FROM user;");
             ResultSet rs = ps.executeQuery();
+            List<User> users = new ArrayList<>();
             while(rs.next()){
                 users.add(new User());
             }
+            return users;
         } catch (SQLException ex) {
-            throw new NotesDBException();
+            throw new NotesDBException("something serious happened");
         }
-        
-        
-        return null;
     }
 
     /**
