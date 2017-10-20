@@ -7,11 +7,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDB {
 
     public int insert(User user) throws NotesDBException {
-        return 0;
+        try {
+            String preparedQuery = "INSERT INTO User" + "(username,password,email,active,firstname,lastname" + "VALUES " + "(?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(preparedStatement);
+            ps.setString(1,user.getUsername());
+            ps.setString(2,user.getPassword());
+            ps.setString(3,user.getEmail());
+            ps.setInt(4,user.getActive());
+            ps.setString(5,user.getFirstname());
+            ps.setString(6,user.getLastname());
+            int i = ps.executeUpdate();
+            if (i>0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int update(User user) throws NotesDBException {
@@ -42,7 +62,6 @@ public class UserDB {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String selectSQL = "SELECT * FROM User WHERE username = ?";
-        
         try {
             PreparedStatement ps = connection.prepareStatement(selectSQL);
             ps.setString(1, username);
@@ -60,7 +79,8 @@ public class UserDB {
     }
 
     public int delete(User user) throws NotesDBException {
-      ConnectionPool pool = ConnectionPool.getInstance();
+        int deleteStatus = 0;
+        ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         String preparedQuery = "DELETE FROM User "
                             + "WHERE username = ?";
@@ -68,7 +88,7 @@ public class UserDB {
         try {
             ps = connection.prepareStatement(preparedQuery);
             ps.setString(1, user.getUsername());
-            ps.executeUpdate();
+            deleteStatus = ps.executeUpdate();
         } catch (SQLException ex) {
             throw new NotesDBException();
         }
@@ -76,6 +96,6 @@ public class UserDB {
 
         pool.freeConnection(connection);
         
-        return 0;
+        return deleteStatus;
     }
 }
