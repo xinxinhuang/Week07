@@ -5,6 +5,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Manage Users</title>
+        <style>
+        body {
+            background-color: #ff0066;
+        }
+        </style>
     </head>
     <body>
         <h1>Manage Users</h1>
