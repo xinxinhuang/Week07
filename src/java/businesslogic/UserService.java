@@ -29,12 +29,13 @@ public class UserService {
         User deletedUser = userDB.getUser(username);
         return userDB.delete(deletedUser);
     }
-
-    public int insert(String username, String password) throws Exception {
+    
+    public int insert(String username, String password,String email,int active) throws Exception {
         userDB = new UserDB();
+        User insertUser = new User(username,password,email,active);
         
+        return  userDB.insert(insertUser);        
         
-        return 0;
     }
 
 }
