@@ -71,11 +71,13 @@ public class UserDB {
             while (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getInt("active"), rs.getString("firstname"), rs.getString("lastname"));
             }
-            
+            pool.freeConnection(connection);
             return user;
         } catch (SQLException e) {
+            pool.freeConnection(connection);
             throw new NotesDBException();
         }
+        
     }
 
     public int delete(User user) throws NotesDBException {
