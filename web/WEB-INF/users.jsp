@@ -10,6 +10,7 @@
     <body>
         <h1>Manage Users</h1>
         <h2>Users</h2>
+        <p>${errorMessage}</p>
         <table>
             <tr>
                 <th>Username</th>
@@ -56,7 +57,7 @@
         <c:if test="${selectedUser != null}">
             <h3>Edit User</h3>
             <form action="users" method="POST">
-                username: <input type="text" name="username" value="${selectedUser.username}"><br>
+                username: <input type="text" name="username" value="${selectedUser.username}" readonly><br>
                 first name: <input type="text" name="firstname" value="${selectedUser.firstname}"><br>
                 last name: <input type="text" name="lastname" value="${selectedUser.lastname}"><br>
                 password: <input type="password" name="password" value="${selectedUser.password}"><br>
