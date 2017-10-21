@@ -17,7 +17,7 @@ public class UserDB {
         Connection connection = pool.getConnection();
 
         try {
-            String preparedQuery = "INSERT INTO User (username,password,email,active,firstname,lastname VALUES (?, ?, ?, ?, ?, ?)";
+            String preparedQuery = "INSERT INTO User (username,password,email,active,firstname,lastname) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(preparedQuery);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
@@ -52,7 +52,11 @@ public class UserDB {
 
             ps.setString(1, user.getPassword());
             ps.setString(2, user.getEmail());
-            ps.setString(3, user.getUsername());
+            ps.setInt(3, user.getActive());
+            ps.setString(4, user.getFirstname());
+            ps.setString(5, user.getLastname());
+            
+            ps.setString(6, user.getUsername());
 
             int rows = ps.executeUpdate();
             return rows;

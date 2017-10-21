@@ -16,10 +16,22 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<User> users = null;
-        UserService user = new UserService();
+        
+        UserService us = new UserService();
+        String action = request.getParameter("action");
+        if (action != null && action.equals("view")) {
+            String selectedUsername = request.getParameter("selectedUsername");
+            try {
+                User user = us.get(selectedUsername);
+                request.setAttribute("selectedUser", user);
+            } catch (Exception ex) {
+                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        ArrayList<User> users = null;        
         try {
-            users = (ArrayList<User>) user.getAll();
+            users = (ArrayList<User>) us.getAll();
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -30,34 +42,37 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = (String) request.getAttribute("action");
-        String username = (String) request.getAttribute("username");
-        String password = (String) request.getAttribute("password");
-        String email = (String) request.getAttribute("email");
-        String firstname = (String) request.getAttribute("firstname");
-        String lastname = (String) request.getAttribute("lastname");
-        UserService user = new UserService();
+
+        String action = request.getParameter("action");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        int active = request.getParameter("active") != null ? 1 : 0;
+
+        UserService us = new UserService();
+
+        try {
+            if (action.equals("delete")) {
+                String selectedUsername = request.getParameter("selectedUsername");
+                us.delete(selectedUsername);
+            } else if (action.equals("edit")) {
+                us.update(username, password, email, active, firstname, lastname);
+            } else if (action.equals("add")) {
+                us.insert(username, password, email, active, firstname, lastname);
+            }
+        } catch (Exception ex) {
+            request.setAttribute("errorMessage", "Whoops.  Could not perform that action.");
+        }
         
-        if (action.equals("delete")) {
-            try {
-                user.delete(username);
-            } catch (Exception ex) {
-                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (action.equals("edit")) {
-            try {
-                user.update(username, password, email);
-            } catch (Exception ex) {
-                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        ArrayList<User> users = null;
+        try {
+            users = (ArrayList<User>) us.getAll();
+        } catch (Exception ex) {
+            Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        else if (action.equals("add"))
-        {
-            try {
-                user.insert(username, password, email, 1, firstname, lastname);
-            } catch (Exception ex) {
-                Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        request.setAttribute("users", users);
+        getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
     }
 }
