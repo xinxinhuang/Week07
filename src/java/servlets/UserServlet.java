@@ -3,7 +3,7 @@ package servlets;
 import businesslogic.UserService;
 import domainmodel.User;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -29,9 +29,9 @@ public class UserServlet extends HttpServlet {
             }
         }
         
-        List<User> users = null;        
+        ArrayList<User> users = null;        
         try {
-            users = us.getAll();
+            users = (ArrayList<User>) us.getAll();
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -49,7 +49,7 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
-        boolean active = request.getParameter("active") != null;
+        int active = request.getParameter("active") != null ? 1 : 0;
 
         UserService us = new UserService();
 
@@ -66,12 +66,9 @@ public class UserServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Whoops.  Could not perform that action.");
         }
         
-        List<User> users = null;
+        ArrayList<User> users = null;
         try {
-            users = us.getAll();
-            
-            int number_notes = users.get(0).getNoteList().size();
-            
+            users = (ArrayList<User>) us.getAll();
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
